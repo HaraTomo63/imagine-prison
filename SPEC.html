@@ -1,0 +1,182 @@
+﻿<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>Imagine Prison Terminal - 機能仕様書</title>
+  <style>body{font-family:system-ui,Segoe UI,Meiryo,sans-serif;line-height:1.6;padding:24px;} code,pre{font-family:Consolas,Monaco,monospace;}</style>
+</head>
+<body>
+<h1>Imagine Prison Terminal - 機能仕様書</h1>
+<p>この文書は、現時点の実装の機能一覧です。</p>
+<p>HTML LiveViewでの閲覧を前提に整理しています。</p>
+<h2>進捗</h2>
+<ul>
+  <li>UI/入力/結果/ログの基盤を実装済み。</li>
+  <li>JSON駆動の行動処理を実装済み。</li>
+  <li>GMセーブ/ロード（3スロット）を実装済み。</li>
+  <li>Status Checkを実装済み。</li>
+  <li>オートセーブは未使用（削除済み）。</li>
+</ul>
+<h2>1. 画面とUI</h2>
+<ul>
+  <li>単一ページ構成（index.html）。</li>
+  <li>上部: タイトル表示。</li>
+  <li>中央: 入力スロット（Identity / Action / Supplement）。</li>
+  <li>実行ログ表示エリア（時刻付き）。</li>
+  <li>実行結果オーバーレイ（Result）。</li>
+  <li>Status Check オーバーレイ（秘匿ステータス）。</li>
+  <li>GM Control オーバーレイ（セーブ/ロード）。</li>
+  <li>画面演出レイヤー（フラッシュ/オーロラ/警告）。</li>
+</ul>
+<h2>2. 入力仕様</h2>
+<h3>2.1 入力スロット</h3>
+<ul>
+  <li>Identity: アクセスキー（password入力）。</li>
+  <li>Action: 行動名（文字列）。</li>
+  <li>Supplement: 任意補足（文字列）。</li>
+</ul>
+<h3>2.2 実行条件</h3>
+<ul>
+  <li>Identity と Action は必須。</li>
+  <li>Enterキーでも実行可（入力欄フォーカス中）。</li>
+  <li>実行時は画面フラッシュ演出が入る。</li>
+</ul>
+<h3>2.3 結果表示</h3>
+<ul>
+  <li>結果オーバーレイで文字をタイピング表示。</li>
+  <li>結果にステータス変化を表示。</li>
+  <li>CONFIRMで結果を消去し、入力欄/ログを初期化。</li>
+</ul>
+<h2>3. ログ仕様</h2>
+<ul>
+  <li>実行ごとに1行、時刻付きログを表示。</li>
+  <li>CONFIRMで表示ログはクリア。</li>
+  <li>内部履歴（logHistory）は保存対象。</li>
+</ul>
+<h2>4. プレイヤー判定とペナルティ</h2>
+<ul>
+  <li>Identity不一致時、全員MPにペナルティ。</li>
+  <li>値は system.invalidAccessPenalty（既定5）。</li>
+  <li>警告メッセージを表示。</li>
+  <li>警告演出（danger）が発動。</li>
+</ul>
+<h2>5. 行動処理ルール（JSON駆動）</h2>
+<h3>5.1 データ読み込み</h3>
+<ul>
+  <li>assets/data/game-data.json を起動時に読む。</li>
+  <li>読み込み失敗時は空データ扱い。</li>
+</ul>
+<h3>5.2 ルール構造（actions）</h3>
+<ul>
+  <li>必須: action が完全一致。</li>
+  <li>任意: identity が一致した場合のみ適用。</li>
+  <li>任意: supplement が完全一致した場合のみ適用。</li>
+  <li>任意: supplementPattern (正規表現) に一致。</li>
+</ul>
+<h3>5.3 優先度</h3>
+<ul>
+  <li>identityは+2、supplementは+1でスコア化。</li>
+  <li>最も高スコアのルールを採用。</li>
+  <li>同スコア時は先に定義されたルール。</li>
+</ul>
+<h3>5.4 効果</h3>
+<ul>
+  <li>mp/credは数値変動（未指定は0）。</li>
+  <li>MPは0未満にならない。</li>
+  <li>CREDはマイナスも許容。</li>
+  <li>msgは結果表示に使用。</li>
+  <li>effectは演出指定（例: aurora）。</li>
+</ul>
+<h3>5.5 例</h3>
+<pre><code>
+{
+  "actions": [
+    {
+      "action": "採掘",
+      "mp": -5,
+      "cred": 8,
+      "msg": "..."
+    },
+    {
+      "identity": "haze7",
+      "action": "解析",
+      "mp": -3,
+      "cred": 5,
+      "msg": "..."
+    },
+    {
+      "action": "会話",
+      "supplement": "囚人A",
+      "mp": -1,
+      "cred": 0,
+      "msg": "..."
+    }
+  ]
+}
+</code></pre>
+<h2>6. ステータス表示（Status Check）</h2>
+<ul>
+  <li>アクセスキー入力でMP/CRED/secretを一時表示。</li>
+  <li>不一致時はエラー表示のみ。</li>
+  <li>CLOSEで情報を消去。</li>
+</ul>
+<h2>7. GM機能（セーブ/ロード）</h2>
+<h3>7.1 起動条件</h3>
+<ul>
+  <li>Identity = GM, Action = 9999 で起動。</li>
+</ul>
+<h3>7.2 セーブ/ロード画面</h3>
+<ul>
+  <li>セーブスロットは3つ。</li>
+  <li>SAVE/LOADボタンで操作。</li>
+  <li>確認ダイアログでYES/NO。</li>
+  <li>ロードでプレイヤー状態とログ履歴を差し替え。</li>
+</ul>
+<h3>7.3 スロット情報</h3>
+<ul>
+  <li>保存日時とログ数を表示。</li>
+  <li>空スロットはEMPTY表示。</li>
+</ul>
+<h3>7.4 オーバーレイ操作</h3>
+<ul>
+  <li>CLOSEでGM画面を閉じる。</li>
+  <li>EscキーでもGM画面を閉じる。</li>
+</ul>
+<h2>8. 保存データ仕様（LocalStorage）</h2>
+<h3>8.1 保存キー</h3>
+<ul>
+  <li>imagine-prison-slot-1 / -2 / -3</li>
+</ul>
+<h3>8.2 保存内容</h3>
+<ul>
+  <li>players（全員ステータス）</li>
+  <li>logHistory（内部ログ）</li>
+  <li>savedAt（ISOタイムスタンプ）</li>
+</ul>
+<h2>9. キーボード操作</h2>
+<ul>
+  <li>Enter: 入力欄から実行。</li>
+  <li>Enter: 結果表示中はCONFIRM。</li>
+  <li>Escape: GM画面を閉じる。</li>
+</ul>
+<h2>10. 演出</h2>
+<ul>
+  <li>フラッシュ: 実行時に画面短時間フラッシュ。</li>
+  <li>オーロラ: effect=aurora 指定時。</li>
+  <li>警告パルス: MP危険域（20以下）到達時。</li>
+</ul>
+<h2>11. 既知の制約</h2>
+<ul>
+  <li>進行管理（ループ等）はGM運用前提。</li>
+  <li>行動の追加入力はJSON編集のみ。</li>
+  <li>ログ表示はCONFIRMで毎回リセット。</li>
+</ul>
+<h2>12. 関連ファイル</h2>
+<ul>
+  <li>index.html</li>
+  <li>assets/css/style.css</li>
+  <li>assets/js/app.js</li>
+  <li>assets/data/game-data.json</li>
+</ul>
+</body>
+</html>

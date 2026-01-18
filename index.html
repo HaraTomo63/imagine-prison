@@ -1,0 +1,152 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>IMAGINE PRISON | Terminal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/style.css" />
+  </head>
+  <body>
+    <main class="screen">
+      <header class="header">
+        <div>
+          <p class="eyebrow">IMAGINE PRISON / TERMINAL</p>
+          <h1>仮想空間型中央刑務所</h1>
+        </div>
+      </header>
+
+      <!-- 実行ログ -->
+      <section class="log" id="log" aria-live="polite"></section>
+
+      <!-- メイン入力 -->
+      <section class="input-panel">
+        <div class="slot">
+          <label for="identity">Identity</label>
+          <div class="slot-row">
+            <span class="prompt">&gt;</span>
+            <input
+              id="identity"
+              type="password"
+              autocomplete="off"
+              placeholder="アクセスキー"
+            />
+          </div>
+        </div>
+
+        <div class="slot">
+          <label for="action">Action</label>
+          <div class="slot-row">
+            <span class="prompt">&gt;</span>
+            <input
+              id="action"
+              type="text"
+              autocomplete="off"
+              placeholder="行動を入力"
+            />
+          </div>
+        </div>
+
+        <div class="slot">
+          <label for="supplement">Supplement</label>
+          <div class="slot-row">
+            <span class="prompt">&gt;</span>
+            <input
+              id="supplement"
+              type="text"
+              autocomplete="off"
+              placeholder="任意入力"
+            />
+          </div>
+        </div>
+
+        <button class="execute" id="executeBtn">EXECUTE</button>
+      </section>
+
+      <!-- 秘匿ステータス確認 -->
+      <section class="status-check">
+        <div class="status-header">Status Check</div>
+        <div class="status-row">
+          <input
+            id="statusKey"
+            type="password"
+            autocomplete="off"
+            placeholder="アクセスキー"
+          />
+          <button id="statusBtn">STATUS CHECK</button>
+        </div>
+      </section>
+    </main>
+
+    <!-- 実行結果 -->
+    <section class="overlay hidden" id="resultOverlay" aria-live="polite">
+      <div class="result-card">
+        <div class="result-title">RESULT LOG</div>
+        <div class="result-text" id="resultText"></div>
+        <div class="result-status" id="resultStatus"></div>
+        <button class="confirm" id="confirmBtn">CONFIRM</button>
+      </div>
+    </section>
+
+    <!-- Status表示 -->
+    <section class="overlay hidden" id="statusOverlay">
+      <div class="status-card">
+        <div class="status-title">PERSONAL STATUS</div>
+        <div class="status-body" id="statusBody"></div>
+        <button class="confirm ghost" id="statusCloseBtn">CLOSE</button>
+      </div>
+    </section>
+
+    <!-- GMセーブ/ロード -->
+    <section class="overlay hidden" id="gmOverlay">
+      <div class="gm-card">
+        <div class="gm-title">GM CONTROL</div>
+        <div class="gm-slots">
+          <div class="gm-slot" data-slot="1">
+            <div class="gm-slot-header">SLOT 1</div>
+            <div class="gm-slot-meta" id="slotMeta1">EMPTY</div>
+            <div class="gm-slot-actions">
+              <button class="gm-save" data-slot="1">SAVE</button>
+              <button class="gm-load" data-slot="1">LOAD</button>
+            </div>
+          </div>
+          <div class="gm-slot" data-slot="2">
+            <div class="gm-slot-header">SLOT 2</div>
+            <div class="gm-slot-meta" id="slotMeta2">EMPTY</div>
+            <div class="gm-slot-actions">
+              <button class="gm-save" data-slot="2">SAVE</button>
+              <button class="gm-load" data-slot="2">LOAD</button>
+            </div>
+          </div>
+          <div class="gm-slot" data-slot="3">
+            <div class="gm-slot-header">SLOT 3</div>
+            <div class="gm-slot-meta" id="slotMeta3">EMPTY</div>
+            <div class="gm-slot-actions">
+              <button class="gm-save" data-slot="3">SAVE</button>
+              <button class="gm-load" data-slot="3">LOAD</button>
+            </div>
+          </div>
+        </div>
+        <div class="gm-confirm hidden" id="gmConfirm">
+          <div class="gm-confirm-text" id="gmConfirmText"></div>
+          <div class="gm-confirm-actions">
+            <button class="gm-confirm-yes" id="gmConfirmYes">YES</button>
+            <button class="gm-confirm-no" id="gmConfirmNo">NO</button>
+          </div>
+        </div>
+        <button class="confirm ghost" id="gmCloseBtn">CLOSE</button>
+      </div>
+    </section>
+
+    <!-- 演出レイヤー -->
+    <div id="effectLayer" aria-hidden="true"></div>
+    <div id="flashLayer" aria-hidden="true"></div>
+
+    <script src="assets/js/app.js" defer></script>
+  </body>
+</html>

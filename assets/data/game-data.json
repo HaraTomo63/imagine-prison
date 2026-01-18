@@ -1,0 +1,25 @@
+﻿{
+  "system": {
+    "invalidAccessPenalty": 5},
+  "players": {
+    "haze7": { "name": "ゆうき", "mp": 100, "cred": 10, "secret": "タバコの残り香" },
+    "hype3": { "name": "ぺこ", "mp": 100, "cred": 50, "secret": "消えた顧客名簿" },
+    "root9": { "name": "びびあん", "mp": 100, "cred": 0, "secret": "未完成の方程式" },
+    "acid5": { "name": "まぐみん", "mp": 100, "cred": 0, "secret": "汚染の座標" }
+  },
+  "actions": [
+    {
+      "action": "採掘",
+      "mp": -5,
+      "cred": 8,
+      "msg": "環境修復演算プロセスをバイパスし、CREDを抽出しました。"
+    },
+    {
+      "action": "虹パン",
+      "mp": 20,
+      "cred": -30,
+      "msg": "高エネルギー虹彩データを脳に直接書き込みました。解像度が上昇します。",
+      "effect": "aurora"
+    }
+  ]
+}
