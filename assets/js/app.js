@@ -1,4 +1,4 @@
-﻿// セーブデータの保存キー
+// セーブデータの保存キー
 const STORAGE_KEYS = {
   slot: (slot) => `imagine-prison-slot-${slot}`
 };
