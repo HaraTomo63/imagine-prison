@@ -167,7 +167,6 @@ const applySnapshot = (snapshot) => {
   renderIdleLog();
   return true;
 };
-\r\n
 const formatSlotMeta = (snapshot) => {
   if (!snapshot) {
     return "EMPTY";
