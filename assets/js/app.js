@@ -5,7 +5,7 @@ const STORAGE_KEYS = {
 
 // システムの既定値
 const DEFAULT_SYSTEM = {
-  invalidAccessPenalty: 5,
+  invalidAccessPenalty: 5
 };
 
 // DOM参照
